@@ -25,3 +25,9 @@ void i18n.use(initReactI18next).init({
 });
 
 export default i18n;
+
+/** Switches the language and remembers the choice. */
+export function setLanguage(lang: Lang) {
+  trackerStorage.setPref('lang', lang);
+  void i18n.changeLanguage(lang);
+}

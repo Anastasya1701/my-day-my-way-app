@@ -1,3 +1,35 @@
+import { useEffect } from 'react';
+import { SectionLabel } from './components/SectionLabel';
+import { Areas } from './features/Areas/Areas';
+import { Header } from './features/Header/Header';
+import { DaySummary } from './features/Summary/DaySummary';
+import { useAppT } from './i18n/useAppT';
+import { useDayStore } from './state/useDayStore';
+
 export default function App() {
-  return <div className="wrap" />;
+  const { t, lang } = useAppT();
+  const theme = useDayStore((s) => s.theme);
+  const bootstrap = useDayStore((s) => s.bootstrap);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('lang', lang);
+    document.title = t('brand');
+  }, [lang, t]);
+
+  useEffect(() => {
+    if (theme) document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  // Stamp "last saved" on load, as the MVP did.
+  useEffect(bootstrap, [bootstrap]);
+
+  return (
+    <div className="wrap">
+      <Header />
+      <DaySummary />
+
+      <SectionLabel>{t('secSpheres')}</SectionLabel>
+      <Areas />
+    </div>
+  );
 }
