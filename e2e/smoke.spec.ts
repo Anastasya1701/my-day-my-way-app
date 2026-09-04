@@ -84,3 +84,35 @@ test('plans the day in the timesheet and remembers the section and theme', async
   await expect(page.locator('#tsBody')).toBeVisible();
   await expect(page.locator('.ts-block')).toHaveCount(1);
 });
+
+// UI_SPEC §7: "Nothing scrolls horizontally at 360px width."
+test.describe('narrow screens', () => {
+  test.use({ viewport: { width: 360, height: 780 } });
+
+  for (const lang of ['en', 'ru'] as const) {
+    test(`never scrolls sideways at 360px (${lang})`, async ({ page }) => {
+      await page.addInitScript((l) => {
+        localStorage.setItem('tracker_lang', l);
+        localStorage.setItem('tracker_ts_open', '1');
+        localStorage.setItem('tracker_fb_open', '1');
+      }, lang);
+      await page.goto('/');
+
+      const fits = () =>
+        page.evaluate(() => {
+          const de = document.documentElement;
+          return { scrollW: de.scrollWidth, clientW: de.clientWidth };
+        });
+
+      expect(await fits()).toEqual({ scrollW: 360, clientW: 360 });
+
+      // The area tip is the widest floating element — it must stay on screen too.
+      await page.click(`${card(2)} .cat-info`);
+      await expect(page.locator(`${card(2)} .cat-tip`)).toBeVisible();
+      const box = await page.locator(`${card(2)} .cat-tip`).boundingBox();
+      expect(box!.x).toBeGreaterThanOrEqual(0);
+      expect(box!.x + box!.width).toBeLessThanOrEqual(360);
+      expect(await fits()).toEqual({ scrollW: 360, clientW: 360 });
+    });
+  }
+});

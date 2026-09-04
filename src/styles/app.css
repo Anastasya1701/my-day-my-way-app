@@ -324,6 +324,17 @@ a.btn-primary{display:inline-flex;align-items:center;text-decoration:none;}
   .fin-grid{grid-template-columns:1fr;}
   .energy-grid{grid-template-columns:1fr;}
   .wday .wn{font-size:.92rem;}
+
+  /* A tip centred on the "i" glyph hangs off the right edge on a narrow screen
+     and makes the page scroll sideways, which UI_SPEC §7 forbids. Below 560px
+     the tip spans the card row instead. The arrow is dropped here: it can only
+     point at the glyph while the bubble is centred on it, and not scrolling
+     sideways wins over §3.5's arrow at this width. */
+  .cat-head{position:relative;}
+  .cat-info{position:static;}
+  .cat-tip{left:0;right:0;width:auto;transform:translateY(-5px);}
+  .cat-info:hover .cat-tip,.cat-info:focus-within .cat-tip,.cat-info.open .cat-tip{transform:translateY(0);}
+  .cat-tip::after{display:none;}
 }
 @media (prefers-reduced-motion:reduce){
   *{transition:none !important;}
