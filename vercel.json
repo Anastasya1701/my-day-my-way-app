@@ -4,7 +4,6 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
-    { "source": "/en", "destination": "/" },
-    { "source": "/ru", "destination": "/" }
+    { "source": "/(.*)", "destination": "/" }
   ]
 }
