@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import i18n from '.';
+import i18n, { langFromPath, readInitialLang } from '.';
 import en from './en.json';
 import ru from './ru.json';
 
@@ -75,5 +75,32 @@ describe('day summary', () => {
     expect(t.en('summary.few.sub', { done: 2, total: 7 })).toBe('2 of 7 areas marked — keep going.');
     expect(t.ru('summary.many.sub', { done: 5, total: 7 })).toBe('5 из 7 сфер. Ты молодец.');
     expect(t.ru('summary.all.sub', { total: 7 })).toBe('Все 7 сфер закрыты. Гордись собой.');
+  });
+});
+
+describe('language from the URL', () => {
+  it('reads /en and /ru, with or without a trailing slash', () => {
+    expect(langFromPath('/en')).toBe('en');
+    expect(langFromPath('/ru')).toBe('ru');
+    expect(langFromPath('/ru/')).toBe('ru');
+  });
+
+  it('has no opinion about any other path', () => {
+    expect(langFromPath('/')).toBeNull();
+    expect(langFromPath('/de')).toBeNull();
+    expect(langFromPath('/ru/extra')).toBeNull();
+    expect(langFromPath('/legacy/index.html')).toBeNull();
+  });
+
+  it('lets the path win over the remembered choice', () => {
+    localStorage.setItem('tracker_lang', 'en');
+    expect(readInitialLang('/ru')).toBe('ru');
+  });
+
+  it('falls back to the remembered choice, then to English', () => {
+    localStorage.setItem('tracker_lang', 'ru');
+    expect(readInitialLang('/')).toBe('ru');
+    localStorage.removeItem('tracker_lang');
+    expect(readInitialLang('/')).toBe('en');
   });
 });

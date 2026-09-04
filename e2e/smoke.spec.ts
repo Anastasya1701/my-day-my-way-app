@@ -116,3 +116,37 @@ test.describe('narrow screens', () => {
     });
   }
 });
+
+// A shared link must open in the language it was shared in.
+test.describe('language in the URL', () => {
+  test('/ru opens in Russian and /en in English, whatever was remembered', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('tracker_lang', 'en'));
+
+    await page.goto('/ru');
+    await expect(page.locator('.brand')).toHaveText('Дневник вклада');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'ru');
+
+    await page.goto('/en');
+    await expect(page.locator('.brand')).toHaveText('My Day, My Way');
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  });
+
+  test('the toggle rewrites the path so the address bar stays shareable', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('.brand')).toHaveText('My Day, My Way');
+
+    await page.click(LANG_BTN);
+    await expect(page.locator('.brand')).toHaveText('Дневник вклада');
+    expect(new URL(page.url()).pathname).toBe('/ru');
+
+    await page.click(LANG_BTN);
+    await expect(page.locator('.brand')).toHaveText('My Day, My Way');
+    expect(new URL(page.url()).pathname).toBe('/en');
+  });
+
+  test('a language link survives a reload', async ({ page }) => {
+    await page.goto('/ru');
+    await page.reload();
+    await expect(page.locator('.brand')).toHaveText('Дневник вклада');
+  });
+});
