@@ -4,13 +4,13 @@ A gentle, precise **daily contribution tracker**. Every day you mark the areas o
 
 Bilingual out of the box: **English / Русский** (toggle in the header, choice is remembered).
 
-> Live design/prototype was built in Claude (Cowork). This repository is the starting point for turning it into a production product with Claude Code in an IDE. See [`docs/`](./docs).
+> Live design/prototype was built in Claude (Cowork). This repository is turning it into a production product with Claude Code in an IDE. See [`docs/`](./docs).
 
 ---
 
-## What's inside (current state — MVP)
+## What's inside
 
-The whole app is currently **one self-contained static file** — `index.html` — with no build step required and no external dependencies except Google Fonts. It works by opening the file in any modern browser.
+A **Vite + React + TypeScript** app in [`src/`](./src). The original single-file prototype is kept at [`legacy/index.html`](./legacy/index.html) as the parity reference — it still runs on its own, with no build step.
 
 Features:
 
@@ -28,34 +28,42 @@ Features:
 
 ## Tech notes (important for the next phase)
 
-- **State lives in `localStorage`** under keys prefixed `tracker_` (`tracker_v1` holds all day data; `tracker_lang`, `tracker_theme`, `tracker_currency`, `tracker_ts_open`, `tracker_fb_open`). This means data is **per browser, per device — not synced and not backed up.** Turning this into a real product for an audience means adding accounts + a backend (see [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md)).
-- **i18n** is a hand-rolled dictionary (`I18N = { ru, en }`) inside the script, applied via `data-i18n` / `data-i18n-ph` / `data-i18n-aria` attributes and a `applyLang()` pass. Fine for two languages today; the architecture doc covers moving to a real i18n library if the app grows.
+- **State still lives in `localStorage`**, behind a `TrackerStorage` interface (`src/lib/storage.ts`), under the same keys as the prototype: `tracker_v1` holds every day, plus `tracker_lang`, `tracker_theme`, `tracker_currency`, `tracker_ts_open`, `tracker_fb_open`. So data is **per browser, per device — not synced and not backed up.** Accounts and a backend are Phase 2 (see [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md)); the interface is the seam they slot into.
+- **i18n** is i18next + react-i18next with resources in `src/i18n/en.json` and `ru.json`. Every user-facing string lives there, in both languages.
 - **Feedback** uses a `mailto:` link (client-side only). A published static page cannot silently send email; the production plan replaces this with a backend endpoint.
+- **No analytics, no trackers, no third-party scripts.** The only external resource is Google Fonts. Everything you write stays in your own browser.
 
 ## Run it locally
 
-Zero-dependency way — just open `index.html` in a browser.
-
-With the dev server (recommended once you start editing):
-
 ```bash
 npm install
-npm run dev      # serves at http://localhost:5173
-npm run build    # outputs static site to /dist
-npm run preview  # preview the production build
+npm run dev        # http://localhost:5173  (the MVP is at /legacy/index.html)
+npm run build      # type-checks, then writes the static site to /dist
+npm run preview    # serve the production build
 ```
 
-## Deploy the MVP as-is
+Tests:
 
-The current `index.html` is deployable today. Any static host works:
+```bash
+npm test           # Vitest unit tests
+npm run test:e2e   # Playwright smoke test against the production build
+npm run typecheck  # tsc --noEmit
+```
 
-- **Vercel / Netlify / Cloudflare Pages** — point at this repo, framework preset “Other / Vite”, build command `npm run build`, output `dist` (or deploy the single `index.html` with no build at all).
-- **GitHub Pages** — serve `index.html` from the repo.
+The prototype needs nothing at all — open `legacy/index.html` in a browser.
+
+## Deploy
+
+The app is a static bundle. Any static host works:
+
+- **Vercel / Netlify / Cloudflare Pages** — point at this repo, framework preset “Vite”, build command `npm run build`, output directory `dist`.
+- **GitHub Pages** — publish the contents of `dist/`.
 
 ## Where to go next
 
+- [`docs/ROADMAP.md`](./docs/ROADMAP.md) — phased plan from MVP → real product. Phase 1 (the React migration) is done; Phase 2 is accounts + sync.
 - [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) — recommended production stack & data layer.
-- [`docs/ROADMAP.md`](./docs/ROADMAP.md) — phased plan from MVP → real product.
+- [`docs/PARITY.md`](./docs/PARITY.md) — how the React app was verified against the prototype.
 - [`docs/CLAUDE_CODE_PROMPT.md`](./docs/CLAUDE_CODE_PROMPT.md) — a ready-to-paste prompt to continue with Claude Code.
 - [`CLAUDE.md`](./CLAUDE.md) — project memory Claude Code reads automatically.
 

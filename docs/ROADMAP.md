@@ -11,18 +11,20 @@ Goal: a live URL you can share today.
 - [ ] Add a real favicon and social preview image (`og:image`).
 - [ ] Quick pass: test EN/RU, light/dark, on mobile + desktop.
 
-## Phase 1 — Framework migration with parity (2–4 days)
+## Phase 1 — Framework migration with parity (2–4 days) ✅
 
 Goal: same product, now a maintainable React + TS codebase. **No new features.**
 
-- [ ] Scaffold Vite + React + TypeScript.
-- [ ] Move design tokens to `styles/tokens.css` unchanged.
-- [ ] Port each section to a component (see structure in ARCHITECTURE.md). Match layout, spacing, copy, animations pixel-for-pixel against `legacy/index.html`.
-- [ ] Port the `I18N` dictionary into `i18next` resource files (`en.json`, `ru.json`); keep default = English, remembered toggle.
-- [ ] Put persistence behind a `storage` interface (still `localStorage`/IndexedDB under the hood).
-- [ ] Add Vitest tests for: day save/load round-trip, currency formatting per locale, timesheet hour totals, contribution % ring, export table generation.
-- [ ] Add a Playwright smoke test: load → mark areas → switch language → data persists.
-- [ ] Retire `index.html` to `legacy/` once parity is confirmed.
+- [x] Scaffold Vite + React + TypeScript.
+- [x] Move design tokens to `styles/tokens.css` unchanged.
+- [x] Port each section to a component (see structure in ARCHITECTURE.md). Match layout, spacing, copy, animations pixel-for-pixel against `legacy/index.html`.
+- [x] Port the `I18N` dictionary into `i18next` resource files (`en.json`, `ru.json`); keep default = English, remembered toggle.
+- [x] Put persistence behind a `storage` interface (still `localStorage`/IndexedDB under the hood).
+- [x] Add Vitest tests for: day save/load round-trip, currency formatting per locale, timesheet hour totals, contribution % ring, export table generation.
+- [x] Add a Playwright smoke test: load → mark areas → switch language → data persists.
+- [x] Retire `index.html` to `legacy/` once parity is confirmed.
+
+Parity was verified against the MVP — see [`PARITY.md`](./PARITY.md).
 
 ## Phase 2 — Accounts & sync (3–5 days)
 
