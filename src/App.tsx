@@ -2,12 +2,15 @@ import { useEffect } from 'react';
 import { SectionLabel } from './components/SectionLabel';
 import { Areas } from './features/Areas/Areas';
 import { Energy } from './features/Energy/Energy';
+import { Export } from './features/Export/Export';
+import { Feedback } from './features/Feedback/Feedback';
 import { Header } from './features/Header/Header';
 import { Money } from './features/Money/Money';
 import { Notes } from './features/Notes/Notes';
+import { SavedNote } from './features/Notes/SavedNote';
+import { DaySummary } from './features/Summary/DaySummary';
 import { Timesheet } from './features/Timesheet/Timesheet';
 import { Wellbeing } from './features/Wellbeing/Wellbeing';
-import { DaySummary } from './features/Summary/DaySummary';
 import { useAppT } from './i18n/useAppT';
 import { useDayStore } from './state/useDayStore';
 
@@ -42,6 +45,11 @@ export default function App() {
       <Wellbeing />
       <Energy />
       <Notes />
+
+      <Export />
+      <Feedback />
+
+      <SavedNote />
     </div>
   );
 }
