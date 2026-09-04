@@ -1,0 +1,60 @@
+/* Design tokens — ported verbatim from the MVP (legacy/index.html).
+   Light values on :root, dark overrides for the system preference and for
+   an explicit [data-theme="dark"]. Never hardcode a colour that only works
+   in one theme — add a token here instead. */
+
+:root{
+  --bg:#FCF6F7;
+  --surface:#FFFFFF;
+  --surface-2:#FBF0F2;
+  --ink:#3A2833;
+  --ink-soft:#8A7078;
+  --line:#EFE0E4;
+  --accent:#B85C86;
+  --accent-ink:#9A4870;
+  --accent-soft:#F4E1E9;
+  --gold:#B98F45;
+  --gold-soft:#F6ECD8;
+  --drain:#8C7CB0;
+  --good:#5E9E82;
+  --shadow:0 14px 40px -22px rgba(120,50,80,.45);
+  --shadow-sm:0 4px 16px -10px rgba(120,50,80,.4);
+  --radius:22px;
+  --radius-sm:14px;
+}
+:root:not([data-theme="light"]){
+  @media (prefers-color-scheme: dark){
+    --bg:#20161D;
+    --surface:#2B1F27;
+    --surface-2:#33242E;
+    --ink:#F4E8EE;
+    --ink-soft:#BFA3B1;
+    --line:#3D2C37;
+    --accent:#E48CAE;
+    --accent-ink:#EFA6C1;
+    --accent-soft:#3A2632;
+    --gold:#D9B879;
+    --gold-soft:#352A1E;
+    --drain:#A99BC9;
+    --good:#84C3A3;
+    --shadow:0 16px 44px -22px rgba(0,0,0,.7);
+    --shadow-sm:0 6px 18px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#20161D;
+  --surface:#2B1F27;
+  --surface-2:#33242E;
+  --ink:#F4E8EE;
+  --ink-soft:#BFA3B1;
+  --line:#3D2C37;
+  --accent:#E48CAE;
+  --accent-ink:#EFA6C1;
+  --accent-soft:#3A2632;
+  --gold:#D9B879;
+  --gold-soft:#352A1E;
+  --drain:#A99BC9;
+  --good:#84C3A3;
+  --shadow:0 16px 44px -22px rgba(0,0,0,.7);
+  --shadow-sm:0 6px 18px -12px rgba(0,0,0,.6);
+}
