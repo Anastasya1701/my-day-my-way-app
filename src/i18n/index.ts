@@ -2,7 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import en from './en.json';
 import ru from './ru.json';
-import { trackerStorage } from '../lib/storage';
+import { getStorage } from '../lib/storage';
 import type { Lang } from '../lib/types';
 
 export const LANGS: Lang[] = ['en', 'ru'];
@@ -11,7 +11,7 @@ export const LANGS: Lang[] = ['en', 'ru'];
 export const DEFAULT_LANG: Lang = 'en';
 
 export function readStoredLang(): Lang {
-  const stored = trackerStorage.getPref('lang');
+  const stored = getStorage().getPref('lang');
   return stored === 'ru' || stored === 'en' ? stored : DEFAULT_LANG;
 }
 
@@ -28,6 +28,6 @@ export default i18n;
 
 /** Switches the language and remembers the choice. */
 export function setLanguage(lang: Lang) {
-  trackerStorage.setPref('lang', lang);
+  getStorage().setPref('lang', lang);
   void i18n.changeLanguage(lang);
 }

@@ -97,4 +97,17 @@ function safeBackend(): Storage | undefined {
   }
 }
 
-export const trackerStorage = createLocalStorage();
+let active: TrackerStorage = createLocalStorage();
+
+/** The storage every caller should use. */
+export function getStorage(): TrackerStorage {
+  return active;
+}
+
+/**
+ * Swaps the backend — used by tests today, and by Phase 2 to slot in the
+ * account-backed cache without touching any caller.
+ */
+export function setStorage(next: TrackerStorage) {
+  active = next;
+}

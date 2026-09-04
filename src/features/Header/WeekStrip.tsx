@@ -1,5 +1,5 @@
 import { useAppT } from '../../i18n/useAppT';
-import { AREAS } from '../../lib/areas';
+import { contributionPct } from '../../lib/contribution';
 import { dateOf, isFuture, weekKeys } from '../../lib/date';
 import { useDayStore } from '../../state/useDayStore';
 
@@ -13,8 +13,7 @@ export function WeekStrip() {
   return (
     <div className="week">
       {weekKeys(viewDate).map((key, i) => {
-        const done = days[key]?.done;
-        const pct = done ? Math.round((AREAS.filter((c) => done[c.id]).length / AREAS.length) * 100) : 0;
+        const pct = contributionPct(days[key]);
         const cls = `wday${key === viewDate ? ' sel' : ''}${isFuture(key) ? ' future' : ''}`;
         return (
           <button key={key} className={cls} type="button" onClick={() => setViewDate(key)}>

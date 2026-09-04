@@ -1,22 +1,14 @@
 import { useAppT } from '../../i18n/useAppT';
-import { AREAS } from '../../lib/areas';
+import { AREA_COUNT, doneCount, summaryKey } from '../../lib/contribution';
 import { useCurrentDay } from '../../state/useDayStore';
 
 const RING_CIRCUMFERENCE = 2 * Math.PI * 50;
 
-/** Which of the four encouragements the day has earned. */
-function summaryKey(done: number, total: number): string {
-  if (done === 0) return 'none';
-  if (done < 3) return 'few';
-  if (done < total) return 'many';
-  return 'all';
-}
-
 export function DaySummary() {
   const { t } = useAppT();
   const day = useCurrentDay();
-  const total = AREAS.length;
-  const done = AREAS.filter((c) => day.done[c.id]).length;
+  const total = AREA_COUNT;
+  const done = doneCount(day);
   const pct = Math.round((done / total) * 100);
   const key = summaryKey(done, total);
 

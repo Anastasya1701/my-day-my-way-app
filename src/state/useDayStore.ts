@@ -3,8 +3,7 @@ import i18n from '../i18n';
 import { DEFAULT_CURRENCY } from '../lib/currency';
 import { addDays, timeOfDay, todayKey } from '../lib/date';
 import type { DayKey } from '../lib/date';
-import { trackerStorage } from '../lib/storage';
-import type { TrackerStorage } from '../lib/storage';
+import { getStorage } from '../lib/storage';
 import { blankDay } from '../lib/types';
 import type { AreaId, DayMap, DayRecord, Lang, Theme, TimeBlock } from '../lib/types';
 
@@ -50,16 +49,10 @@ export interface DayStore {
   setFbOpen: (open: boolean) => void;
 }
 
-let storage: TrackerStorage = trackerStorage;
 let saveTimer: ReturnType<typeof setTimeout> | null = null;
 
-/** Test seam: swap the persistence backend before creating the store's state. */
-export function setStorageBackend(next: TrackerStorage) {
-  storage = next;
-}
-
 function readTheme(): Theme | null {
-  const stored = storage.getPref('theme');
+  const stored = getStorage().getPref('theme');
   return stored === 'dark' || stored === 'light' ? stored : null;
 }
 
@@ -70,7 +63,7 @@ export const useDayStore = create<DayStore>()((set, get) => {
       clearTimeout(saveTimer);
       saveTimer = null;
     }
-    storage.saveDays(get().days);
+    getStorage().saveDays(get().days);
     set({ savedAt: timeOfDay(new Date(), i18n.language as Lang) });
   };
 
@@ -95,12 +88,12 @@ export const useDayStore = create<DayStore>()((set, get) => {
   };
 
   return {
-    days: storage.loadDays(),
+    days: getStorage().loadDays(),
     viewDate: todayKey(),
     theme: readTheme(),
-    currency: storage.getPref('currency') || DEFAULT_CURRENCY,
-    tsOpen: storage.getPref('tsOpen') === '1',
-    fbOpen: storage.getPref('fbOpen') === '1',
+    currency: getStorage().getPref('currency') || DEFAULT_CURRENCY,
+    tsOpen: getStorage().getPref('tsOpen') === '1',
+    fbOpen: getStorage().getPref('fbOpen') === '1',
     savedAt: '—',
 
     bootstrap: saveNow,
@@ -122,19 +115,19 @@ export const useDayStore = create<DayStore>()((set, get) => {
     removeEnergyItem: (kind, index) => edit((d) => ({ ...d, [kind]: d[kind].filter((_, i) => i !== index) }), true),
 
     setCurrency: (code) => {
-      storage.setPref('currency', code);
+      getStorage().setPref('currency', code);
       set({ currency: code });
     },
     setTheme: (theme) => {
-      storage.setPref('theme', theme);
+      getStorage().setPref('theme', theme);
       set({ theme });
     },
     setTsOpen: (open) => {
-      storage.setPref('tsOpen', open ? '1' : '0');
+      getStorage().setPref('tsOpen', open ? '1' : '0');
       set({ tsOpen: open });
     },
     setFbOpen: (open) => {
-      storage.setPref('fbOpen', open ? '1' : '0');
+      getStorage().setPref('fbOpen', open ? '1' : '0');
       set({ fbOpen: open });
     },
   };
