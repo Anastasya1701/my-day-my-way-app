@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { SectionLabel } from './components/SectionLabel';
 import { Areas } from './features/Areas/Areas';
 import { Header } from './features/Header/Header';
+import { Timesheet } from './features/Timesheet/Timesheet';
 import { DaySummary } from './features/Summary/DaySummary';
 import { useAppT } from './i18n/useAppT';
 import { useDayStore } from './state/useDayStore';
@@ -30,6 +31,8 @@ export default function App() {
 
       <SectionLabel>{t('secSpheres')}</SectionLabel>
       <Areas />
+
+      <Timesheet />
     </div>
   );
 }
