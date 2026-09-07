@@ -343,6 +343,15 @@ a.btn-primary{display:inline-flex;align-items:center;text-decoration:none;}
   .cat-info:hover .cat-tip,.cat-info:focus-visible .cat-tip,.cat-info.open .cat-tip{transform:translateY(0);}
   .cat-tip::after{display:none;}
 }
+/* iOS Safari zooms the whole page whenever it focuses a field whose text is
+   smaller than 16px, and it never zooms back out — every tap into a note left
+   the layout enlarged. On touch devices the editable controls are pinned to
+   16px so focus never triggers that zoom. Pinch zoom stays available (no
+   `maximum-scale` hack). The read-only export box is left alone: it opens no
+   keyboard, and its monospace table has to keep fitting the width. */
+@media (pointer:coarse){
+  .cat-note,.cur-sel,.ep-add input,.ts-form input,.ts-form select,.daynote,.fb-input{font-size:16px;}
+}
 @media (prefers-reduced-motion:reduce){
   *{transition:none !important;}
 }
