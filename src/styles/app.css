@@ -107,7 +107,14 @@ body{
   z-index:30;pointer-events:none;}
 .cat-tip::after{content:"";position:absolute;bottom:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-bottom-color:var(--ink);}
 .cat-tip b{color:var(--surface);font-weight:700;display:block;margin-bottom:4px;font-size:.83rem;}
-.cat-info:hover .cat-tip,.cat-info:focus-within .cat-tip,.cat-info.open .cat-tip{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
+.cat-info:focus-visible .cat-tip,.cat-info.open .cat-tip{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
+/* Touch has no hover to lose and leaves the glyph focused after the tap, so a
+   :hover or :focus-within rule would pin the tip open with no way to dismiss
+   it. Hover only opens the tip where a real pointer exists; on touch the
+   `open` class does, and AreaCard closes it on an outside tap or Escape. */
+@media (hover:hover){
+  .cat-info:hover .cat-tip{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);}
+}
 .check{
   width:26px;height:26px;border-radius:50%;flex:none;border:2px solid var(--line);
   display:grid;place-items:center;transition:all .18s ease;background:var(--surface-2);
@@ -333,7 +340,7 @@ a.btn-primary{display:inline-flex;align-items:center;text-decoration:none;}
   .cat-head{position:relative;}
   .cat-info{position:static;}
   .cat-tip{left:0;right:0;width:auto;transform:translateY(-5px);}
-  .cat-info:hover .cat-tip,.cat-info:focus-within .cat-tip,.cat-info.open .cat-tip{transform:translateY(0);}
+  .cat-info:hover .cat-tip,.cat-info:focus-visible .cat-tip,.cat-info.open .cat-tip{transform:translateY(0);}
   .cat-tip::after{display:none;}
 }
 @media (prefers-reduced-motion:reduce){

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties, KeyboardEvent } from 'react';
 import { useAppT } from '../../i18n/useAppT';
 import type { AreaDef } from '../../lib/areas';
@@ -17,6 +17,30 @@ export function AreaCard({ area }: { area: AreaDef }) {
   const toggleArea = useDayStore((s) => s.toggleArea);
   const setAreaNote = useDayStore((s) => s.setAreaNote);
   const [tipOpen, setTipOpen] = useState(false);
+  const infoRef = useRef<HTMLSpanElement>(null);
+
+  // A tap opens the tip but leaves nothing to close it: touch has no hover to
+  // lose, and the glyph keeps focus after the tap. So while a tip is open,
+  // any pointer down outside it — or Escape — closes it and drops the focus.
+  useEffect(() => {
+    if (!tipOpen) return;
+    const close = () => {
+      setTipOpen(false);
+      infoRef.current?.blur();
+    };
+    const onPointerDown = (e: PointerEvent) => {
+      if (!infoRef.current?.contains(e.target as Node)) close();
+    };
+    const onKeyDown = (e: globalThis.KeyboardEvent) => {
+      if (e.key === 'Escape') close();
+    };
+    document.addEventListener('pointerdown', onPointerDown, true);
+    document.addEventListener('keydown', onKeyDown, true);
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown, true);
+      document.removeEventListener('keydown', onKeyDown, true);
+    };
+  }, [tipOpen]);
 
   const on = !!day.done[area.id];
   const name = areaName(area.id);
@@ -42,6 +66,7 @@ export function AreaCard({ area }: { area: AreaDef }) {
         <span className="cat-title">
           <span className="cat-name">{name}</span>
           <span
+            ref={infoRef}
             className={`cat-info${tipOpen ? ' open' : ''}`}
             tabIndex={0}
             role="button"
