@@ -12,7 +12,12 @@ export default defineConfig({
     baseURL: `http://localhost:${PORT}`,
     trace: 'on-first-retry',
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] }, testIgnore: /touch\.spec\.ts/ },
+    // The touch behaviours (no zoom on focus, a dismissable info tip) only
+    // exist under a coarse pointer, so they need an emulated phone.
+    { name: 'mobile', use: { ...devices['Pixel 5'] }, testMatch: /touch\.spec\.ts/ },
+  ],
   // Smoke-tests the production build, not the dev server.
   webServer: {
     command: `npm run build && npm run preview -- --port ${PORT} --strictPort`,
