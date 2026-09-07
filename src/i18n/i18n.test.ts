@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import i18n, { langFromPath, readInitialLang } from '.';
+import { CURRENCIES } from '../lib/currency';
 import en from './en.json';
 import ru from './ru.json';
 
@@ -25,6 +26,16 @@ describe('resources', () => {
         expect(t[lang](`cat.${id}`)).toBeTruthy();
         expect(t[lang](`catShort.${id}`)).toBeTruthy();
         expect(t[lang](`tips.${id}`)).toBeTruthy();
+      });
+    });
+  });
+
+  it('names every selectable currency in both languages', () => {
+    // The key-parity check above only compares top-level keys, so a currency
+    // added to the list without a name would otherwise reach the select raw.
+    CURRENCIES.forEach((code) => {
+      (['en', 'ru'] as const).forEach((lang) => {
+        expect(t[lang](`curNames.${code}`), `${lang} ${code}`).not.toBe(`curNames.${code}`);
       });
     });
   });
