@@ -127,6 +127,8 @@ Single scrolling column, top to bottom, exactly this order:
 
 Responsive: at `max-width: 560px` the category grid, money grid and energy grid all collapse to one column, and the date font shrinks. Content must never scroll horizontally.
 
+Touch: under `@media (pointer:coarse)` every editable control (area notes, currency select, energy add, timesheet form, day note, feedback fields) is pinned to `16px`, because iOS Safari zooms the page in on focusing anything smaller and never zooms back out. The read-only export box keeps its `.74rem` monospace. Pinch zoom stays enabled — never add `maximum-scale` or `user-scalable=no` to the viewport.
+
 ---
 
 ## 3. Component specs
@@ -160,7 +162,8 @@ Responsive: at `max-width: 560px` the category grid, money grid and energy grid 
 Structure: header row then a note textarea.
 - Header row: icon chip, title group (name + "i" info), check circle. `gap 12px`, whole header is one keyboard-focusable button that toggles done
 - Icon chip: `40x40`, radius `12`, background `color-mix(--cat 16%, transparent)`, line icon `22px` stroked in `--cat`, stroke-width `1.9`
-- "i" info glyph sits right after the name, muted (opacity `.42`), brightens on hover/focus. On hover or focus or tap it shows a tooltip: dark bubble (`--ink` background, `--surface` text), `radius 12`, width `min(240px, 74vw)`, a bold area name line then the explanation, centered under the glyph with a small arrow. The tip text comes from the i18n `tips` map. Clicking the glyph must NOT toggle the card (stop propagation)
+- "i" info glyph sits right after the name, muted (opacity `.42`), brightens on hover/focus. On hover or keyboard focus or tap it shows a tooltip: dark bubble (`--ink` background, `--surface` text), `radius 12`, width `min(240px, 74vw)`, a bold area name line then the explanation, centered under the glyph with a small arrow. The tip text comes from the i18n `tips` map. Clicking the glyph must NOT toggle the card (stop propagation)
+- The tip must always be dismissable: tapping the glyph again, tapping anywhere outside it, or Escape closes it. Hover only opens it under `@media (hover:hover)` — on touch a sticky `:hover` (or `:focus-within`, since the glyph keeps focus after a tap) would leave the bubble stranded on screen
 - Check circle: `26x26`, 2px `--line` border, `--surface-2` fill. When done: fill and border become `--cat`, and a white check icon scales in
 - Card "on" state: border `color-mix(--cat 60%, --line)`, background `color-mix(--cat 8%, --surface)`
 - Note textarea: borderless with a dashed top rule in `--line`, `0.86rem`, auto-grows with content, placeholder "what you did…" / "что сделала…", focus turns the top rule to `--cat`
@@ -185,7 +188,7 @@ Expanded view (a card):
 
 ### 3.7 Money today
 - Section label reads "Money today · <CURRENCY>" / "Финансы дня · <CURRENCY>", the currency code updates live
-- Currency row: label + a select of 12 currencies shown as `CODE · name` (localized names), plus a muted note "applies to all days". Choice stored in `tracker_currency`, default `AED`, applied everywhere including export headers
+- Currency row: label + a select of 13 currencies (`AED USD EUR GBP RUB BYN UAH KZT TRY SAR INR PLN GEL`) shown as `CODE · name` (localized names), plus a muted note "applies to all days". Choice stored in `tracker_currency`, default `AED`, applied everywhere including export headers
 - Two money inputs, "Spent today" and "Saved". Each is a rounded `--surface-2` field with the currency code on the left and a right-aligned bold number (`1.12rem`, tabular). Spent field border tinted with accent, saved field tinted with `--good`
 - Three chips below: Day balance (`saved - spent`, green when >= 0 via `--good`, rose when negative via `--accent-ink`, prefixed `−` when negative), Saved this month (gold chip, `--gold-soft` background), Spent this month. Month totals sum every stored day in the viewed month
 - Money format: `CODE 1,234` using the locale's grouping
